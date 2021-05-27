@@ -1,0 +1,90 @@
+body {
+    margin:0;
+    padding:0;
+    background: #000;
+    font-family: 'Montserrat', sans-serif;
+}
+
+form {
+    margin: 10px;
+}
+
+h1{
+    margin:0;
+}
+
+nav {
+    width: 100%;
+    font-family: 'Montserrat Subrayada', sans-serif;
+    font-size: 3.0rem;
+    line-height: 2.6rem;
+    height: 3rem;
+    background: #000;
+    padding: 20px;
+    position: relative;
+    text-align: center;
+    vertical-align: center;
+}
+
+nav a{
+    color: #d3d3d3;
+    font-size: 3.5rem;
+    line-height: 2.6rem;
+    text-decoration: none;
+}
+
+nav a:visited{
+    color: #d3d3d3;
+}
+
+.btn{
+    font-size: 1.5rem;
+    margin: 1rem;
+
+}
+
+/*.btn:hover {
+    background: #c3909b;
+    border: none;
+}*/
+
+.card{
+    background-color: #000;
+    border-radius: 10px;
+    /*height: 80vh;*/
+    width: 100%;
+    color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 30px rgb(80, 80, 80);
+    border-collapse: collapse;
+}
+
+.container{
+    border-radius: 50px;
+    margin: 20px auto;
+    text-align: center;
+    width: 80%;
+
+}
+
+@media (orientation:landscape) {
+    .container{
+        width: 40%;
+    }
+}
+
+.hidden{
+    color: #000
+}
+
+.select {
+    margin-left: 20%;
+}
+
+
+/*
+font-family: 'Kanit', sans-serif;
+font-family: 'Montserrat', sans-serif;
+font-family: 'Montserrat Subrayada', sans-serif;
+*/
+
