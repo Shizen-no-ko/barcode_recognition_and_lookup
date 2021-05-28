@@ -1,5 +1,5 @@
 from read_barcode import ReadBarcode
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, url_for
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -47,24 +47,34 @@ patch_request_class(app)
 class ImageForm(FlaskForm):
     photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
 
+def get_image_file():
+	# returns first image file in uploads folder (should be only one there)
+	file = os.listdir(os.path.join(basedir, 'uploads'))[0]
+	return os.path.join(basedir, 'uploads', file)
+
+def delete_image_file():
+	# clears upload folder
+	files = glob.glob(os.path.join(basedir, 'uploads'))
+	for f in files:
+		os.remove(f)
+
+
 @app.route('/', methods=['POST', 'GET'])
 def home():
 	form = ImageForm()
 	if form.validate_on_submit():
-		print("la la la")
-		# print(form.file.data.filename)
 		filename = photos.save(form.photo.data)
 		file_url = photos.url(filename)
-		print(file_url)
-		# with Image.open(form.file) as im:
-		# 	im.rotate(45).show()
+		return redirect(url_for("image_stage"))
 	else:
 		file_url = None
 	return render_template("index.html", form=form, current_year=current_year, file_url=file_url)
 
+
 @app.route('/selected_image', methods=['POST', 'GET'])
 def image_stage():
-	image = Image.open("uploads/Image_Palette_Finder_1.jpg")
+	image = Image.open(get_image_file())
+	# image = Image.open("uploads/Image_Palette_Finder_1.jpg")
 	data = io.BytesIO()
 	image.save(data, "JPEG")
 	encoded_img_data = base64.b64encode(data.getvalue())
