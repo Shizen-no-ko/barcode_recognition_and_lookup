@@ -1,19 +1,20 @@
 from read_barcode import ReadBarcode
 from flask import Flask, render_template, redirect
-# from flask_bootstrap import Bootstrap
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from flask_uploads import UploadSet, configure_uploads, IMAGES, patch_request_class
-from wtforms import SubmitField
 from dotenv import load_dotenv
 from PIL import Image
 import os
+import io
+import base64
 import glob
 
-files = glob.glob('/YOUR/PATH/*')
-for f in files:
-    os.remove(f)
+# for deleting
+# files = glob.glob('/YOUR/PATH/*')
+# for f in files:
+#     os.remove(f)
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -60,6 +61,15 @@ def home():
 	else:
 		file_url = None
 	return render_template("index.html", form=form, current_year=current_year, file_url=file_url)
+
+@app.route('/selected_image', methods=['POST', 'GET'])
+def image_stage():
+	image = Image.open("uploads/Image_Palette_Finder_1.jpg")
+	data = io.BytesIO()
+	image.save(data, "JPEG")
+	encoded_img_data = base64.b64encode(data.getvalue())
+	return render_template("image_stage.html", img_data=encoded_img_data.decode('utf-8'))
+
 
 
 

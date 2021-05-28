@@ -4,8 +4,8 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="card">
+<!--<div class="container">-->
+<!--    <div class="card">-->
         <h1>Upload</h1>
         <form action="{{ url_for('home') }}" method="POST" enctype="multipart/form-data">
             {{ form.csrf_token }}
@@ -15,7 +15,7 @@
            <input type="submit" value="Submit" class="btn">
         </form>
 
-    </div>
-</div>
+<!--    </div>-->
+<!--</div>-->
 
 {% endblock %}
