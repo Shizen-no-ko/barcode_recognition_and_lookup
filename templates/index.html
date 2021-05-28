@@ -10,9 +10,9 @@
         <form action="{{ url_for('home') }}" method="POST" enctype="multipart/form-data">
             {{ form.csrf_token }}
             <div class="select">
-        {{ form.photo(class="btn") }}
+              {{ form.photo(class="btn") }}
     </div>
-           <input type="submit" value="Submit" class="btn">
+           <input type="submit" value="Upload Image" class="btn">
         </form>
 
 <!--    </div>-->

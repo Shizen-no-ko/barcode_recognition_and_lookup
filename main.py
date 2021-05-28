@@ -27,18 +27,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # from werkzeug.datastructures import  FileStorage
 
 
-reader = ReadBarcode()
+
 
 
 now = datetime.now()
 current_year = now.strftime("%Y")
 
 app = Flask(__name__)
-# app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
-# app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'uploads')
-# Bootstrap(app)
+
 
 photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
@@ -63,24 +61,31 @@ def delete_image_file():
 def home():
 	form = ImageForm()
 	if form.validate_on_submit():
-		filename = photos.save(form.photo.data)
-		file_url = photos.url(filename)
+		photos.save(form.photo.data)
+		# filename = photos.save(form.photo.data)
+		# file_url = photos.url(filename)
 		return redirect(url_for("image_stage"))
-	else:
-		file_url = None
-	return render_template("index.html", form=form, current_year=current_year, file_url=file_url)
+	# else:
+	# 	file_url = None
+	return render_template("index.html", form=form, current_year=current_year)
+# , file_url=file_url
 
-
-@app.route('/selected_image', methods=['POST', 'GET'])
+@app.route('/selected-image', methods=['POST', 'GET'])
 def image_stage():
 	image = Image.open(get_image_file())
-	# image = Image.open("uploads/Image_Palette_Finder_1.jpg")
 	data = io.BytesIO()
 	image.save(data, "JPEG")
 	encoded_img_data = base64.b64encode(data.getvalue())
 	return render_template("image_stage.html", img_data=encoded_img_data.decode('utf-8'))
 
+@app.route('/scan-image', methods=['POST', 'GET'])
+def scan_image():
+	reader = ReadBarcode()
+	reader.scan_image(get_image_file())
+	return redirect(url_for('home'))
 
+
+	return render_template("image_stage.html", img_data=encoded_img_data.decode('utf-8'))
 
 
 

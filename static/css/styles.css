@@ -6,7 +6,7 @@ body {
 }
 
 form {
-    margin: 10px;
+    margin: 20px;
 }
 
 h1{
@@ -44,9 +44,9 @@ nav a:visited{
 
 .btn{
     font-size: 1.5rem;
-    margin: 1rem;
-
+    margin: 20px;
 }
+
 
 /*.btn:hover {
     background: #c3909b;
@@ -83,7 +83,11 @@ nav a:visited{
 }
 
 .select {
-    margin-left: 20%;
+    background:rgb(80, 80, 80);
+    border-radius: 5px;
+    margin: 30px 0;
+
+
 }
 
 
