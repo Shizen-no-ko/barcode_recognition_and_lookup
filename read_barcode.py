@@ -3,6 +3,11 @@ import os
 from dotenv import load_dotenv
 import cloudmersive_barcode_api_client
 from cloudmersive_barcode_api_client.rest import ApiException
+# import requests
+import urllib.request
+from urllib.request import Request, urlopen
+import json
+
 from pprint import pprint
 
 
@@ -28,13 +33,31 @@ class ReadBarcode:
 		# create an instance of the API class
 		api_instance = cloudmersive_barcode_api_client.BarcodeScanApi(
 			cloudmersive_barcode_api_client.ApiClient(self.configuration))
-		image_file = path  # file | Image file to perform the operation on.  Common file formats such as PNG, JPEG are supported.
-
+		image_file = path
 		try:
 			# Scan and recognize an image of a barcode
 			api_response = api_instance.barcode_scan_image(image_file)
-			pprint(api_response)
-		except ApiException as e:
-			print("Exception when calling BarcodeScanApi->barcode_scan_image: %s\n" % e)
+			# self.barcode = api_response.raw_text
+			return api_response.raw_text
+		# except ApiException as e:
+		except ApiException:
+			return False
+			# print("Exception when calling BarcodeScanApi->barcode_scan_image: %s\n" % e)
+
+	def get_product_details(self, value):
+		key = os.getenv("LOOKUP_KEY")
+		api_key = key
+		url = f"https://api.barcodelookup.com/v2/products?barcode={value}&formatted=y&key=" + api_key
+		try:
+			with urllib.request.urlopen(url) as url:
+			data = json.loads(url.read().decode())
+			barcode = data["products"][0]["barcode_number"]
+			print("Barcode Number: ", barcode, "\n")
+			name = data["products"][0]["product_name"]
+			print("Product Name: ", name, "\n")
+
+			print("Entire Response:")
+			pprint(data)
+		except URLError:
 
 

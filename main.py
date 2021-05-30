@@ -81,11 +81,17 @@ def image_stage():
 @app.route('/scan-image', methods=['POST', 'GET'])
 def scan_image():
 	reader = ReadBarcode()
-	reader.scan_image(get_image_file())
+	barcode_number = reader.scan_image(get_image_file())
+	if barcode_number:
+		print(barcode_number)
+		print("Good barcode")
+		# reader.get_product_details(barcode_number)
+	else:
+		print(barcode_number)
+		print("Barcode on image not readable")
 	return redirect(url_for('home'))
 
 
-	return render_template("image_stage.html", img_data=encoded_img_data.decode('utf-8'))
 
 
 
