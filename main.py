@@ -83,9 +83,7 @@ def scan_image():
 	reader = ReadBarcode()
 	barcode_number = reader.scan_image(get_image_file())
 	if barcode_number:
-		print(barcode_number)
-		print("Good barcode")
-		# reader.get_product_details(barcode_number)
+		reader.get_product_details(barcode_number)
 	else:
 		print(barcode_number)
 		print("Barcode on image not readable")
