@@ -3,20 +3,10 @@ import os
 from dotenv import load_dotenv
 import cloudmersive_barcode_api_client
 from cloudmersive_barcode_api_client.rest import ApiException
-# import requests
 import urllib.request
-from urllib.request import Request, urlopen
 import json
 
-from pprint import pprint
-
-
 load_dotenv()
-
-
-
-
-
 
 
 class ReadBarcode:
@@ -27,6 +17,7 @@ class ReadBarcode:
 		load_dotenv()
 		self.key = os.getenv("API_KEY")
 		self.configuration.api_key['Apikey'] = self.key
+		self.lookup_key = os.getenv("LOOKUP_KEY")
 		self.results = {}
 
 
@@ -38,31 +29,30 @@ class ReadBarcode:
 		try:
 			# Scan and recognize an image of a barcode
 			api_response = api_instance.barcode_scan_image(image_file)
-			# self.barcode = api_response.raw_text
 			return api_response.raw_text
-		# except ApiException as e:
 		except ApiException:
 			return False
-			# print("Exception when calling BarcodeScanApi->barcode_scan_image: %s\n" % e)
 
 	def get_product_details(self, value):
-		key = os.getenv("LOOKUP_KEY")
-		api_key = key
-		url = f"https://api.barcodelookup.com/v2/products?barcode={value}&formatted=y&key=" + api_key
+		# set the url
+		url = f"https://api.barcodelookup.com/v2/products?barcode={value}&formatted=y&key=" + self.lookup_key
+		# reset results before new lookup
 		self.results = {}
+		# attempt search on API for barcode info
 		try:
 			with urllib.request.urlopen(url) as url:
 				data = json.loads(url.read().decode())
+			# set dictionary to results received
 			self.results["barcode"] = data["products"][0]["barcode_number"]
 			self.results["name"] = data["products"][0]["product_name"]
 			self.results["brand"] = data["products"][0]["brand"]
 			self.results["description"] = data["products"][0]["description"]
 			self.results["image"] = data["products"][0]["images"][0]
 			self.results["manufacturer"] = data["products"][0]["manufacturer"]
+			# return True for control flow
 			result = True
 		except urllib.error.URLError:
+			# if error return False for control flow
 			result = False
 		finally:
 			return result
-
-

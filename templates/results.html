@@ -5,11 +5,11 @@
 {% block content %}
 
 {% for result in results %}
-{% if result == "image" %}
-<img src="{{ results[result] }}" alt="Product Image">
-{% else %}
-<h5>{{ result }} : {{ results[result]}}</h5>
-{% endif %}
+    {% if result == "image" %}
+        <img src="{{ results[result] }}" alt="Product Image">
+    {% else %}
+        <h5>{{ result }} : {{ results[result]}}</h5>
+    {% endif %}
 {% endfor %}
 
 {% endblock %}
