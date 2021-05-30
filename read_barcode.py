@@ -27,6 +27,7 @@ class ReadBarcode:
 		load_dotenv()
 		self.key = os.getenv("API_KEY")
 		self.configuration.api_key['Apikey'] = self.key
+		self.results = {}
 
 
 	def scan_image(self, path):
@@ -48,17 +49,17 @@ class ReadBarcode:
 		key = os.getenv("LOOKUP_KEY")
 		api_key = key
 		url = f"https://api.barcodelookup.com/v2/products?barcode={value}&formatted=y&key=" + api_key
-		result = {}
+		self.results = {}
 		try:
 			with urllib.request.urlopen(url) as url:
 				data = json.loads(url.read().decode())
-			result["barcode"] = data["products"][0]["barcode_number"]
-			result["name"] = data["products"][0]["product_name"]
-			result["brand"] = data["products"][0]["brand"]
-			result["description"] = data["products"][0]["description"]
-			result["image"] = data["products"][0]["images"][0]
-			result["manufacturer"] = data["products"][0]["manufacturer"]
-			return result
+			self.results["barcode"] = data["products"][0]["barcode_number"]
+			self.results["name"] = data["products"][0]["product_name"]
+			self.results["brand"] = data["products"][0]["brand"]
+			self.results["description"] = data["products"][0]["description"]
+			self.results["image"] = data["products"][0]["images"][0]
+			self.results["manufacturer"] = data["products"][0]["manufacturer"]
+			result = True
 		except urllib.error.URLError:
 			result = False
 		finally:

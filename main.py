@@ -1,5 +1,5 @@
 from read_barcode import ReadBarcode
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -10,6 +10,7 @@ import os
 import io
 import base64
 import glob
+import shutil
 
 # for deleting
 # files = glob.glob('/YOUR/PATH/*')
@@ -42,6 +43,8 @@ photos = UploadSet('photos', IMAGES)
 configure_uploads(app, photos)
 patch_request_class(app)
 
+reader = ReadBarcode()
+
 class ImageForm(FlaskForm):
     photo = FileField(validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])
 
@@ -52,9 +55,19 @@ def get_image_file():
 
 def delete_image_file():
 	# clears upload folder
-	files = glob.glob(os.path.join(basedir, 'uploads'))
-	for f in files:
-		os.remove(f)
+	# files = glob.glob(os.path.join(basedir, 'uploads'))
+	folder = os.path.join(basedir, 'uploads')
+	for filename in os.listdir(folder):
+		file_path = os.path.join(folder, filename)
+		try:
+			if os.path.isfile(file_path) or os.path.islink(file_path):
+				os.unlink(file_path)
+			elif os.path.isdir(file_path):
+				shutil.rmtree(file_path)
+		except Exception as e:
+			print('Failed to delete %s. Reason: %s' % (file_path, e))
+	# for f in files:
+	# 	os.remove(f)
 
 
 @app.route('/', methods=['POST', 'GET'])
@@ -80,14 +93,28 @@ def image_stage():
 
 @app.route('/scan-image', methods=['POST', 'GET'])
 def scan_image():
-	reader = ReadBarcode()
+	# reader = ReadBarcode()
 	barcode_number = reader.scan_image(get_image_file())
 	if barcode_number:
-		reader.get_product_details(barcode_number)
+		result = reader.get_product_details(barcode_number)
+		if result:
+			return redirect(url_for("results"))
+		else:
+			flash("Sorry, no results found for this barcode.")
+			return redirect(url_for("home"))
 	else:
-		print(barcode_number)
-		print("Barcode on image not readable")
-	return redirect(url_for('home'))
+		# print(barcode_number)
+		# print("Barcode on image not readable")
+		flash("Barcode on image not readable.")
+		flash("Try again.")
+		delete_image_file()
+		return redirect(url_for("home"))
+	# return redirect(url_for('home'))
+
+@app.route('/results', methods=['POST', 'GET'])
+def results():
+	return render_template("results.html", results=reader.results)
+
 
 
 

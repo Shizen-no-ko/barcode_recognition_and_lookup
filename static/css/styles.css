@@ -78,8 +78,22 @@ nav a:visited{
     }
 }
 
+
+.flash {
+    color: red;
+    font-size: 1.5rem;
+    font-weight: bold;
+    list-style-type: none;
+    margin: 20px 40px 20px 0;
+}
+
+
 .hidden{
     color: #000
+}
+
+.list{
+    text-align: center;
 }
 
 .select {
