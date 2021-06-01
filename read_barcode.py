@@ -47,8 +47,10 @@ class ReadBarcode:
 			self.results["name"] = data["products"][0]["product_name"]
 			self.results["brand"] = data["products"][0]["brand"]
 			self.results["description"] = data["products"][0]["description"]
-			self.results["image"] = data["products"][0]["images"][0]
 			self.results["manufacturer"] = data["products"][0]["manufacturer"]
+			# handle any possible empty list situation
+			if data["products"][0]["images"]:
+				self.results["image"] = data["products"][0]["images"][0]
 			# return True for control flow
 			result = True
 		except urllib.error.URLError:
