@@ -8,8 +8,10 @@
     {% if result == "image" %}
         <img src="{{ results[result] }}" alt="Product Image">
     {% else %}
-        <h5>{{ result }} : {{ results[result]}}</h5>
+        <h4>{{ result }} : {{ results[result]}}</h4>
     {% endif %}
 {% endfor %}
-
+<form action="{{ url_for('home')}}" method="GET">
+                <input type="submit" value="Read Another Barcode" class="btn">
+        </form>
 {% endblock %}

@@ -76,7 +76,7 @@ def home():
 	return render_template("index.html", form=form, current_year=current_year)
 
 
-@app.route('/selected-image', methods=['POST', 'GET'])
+@app.route('/selected-image', methods=['GET'])
 def image_stage():
 	# open uploaded image from "uploads" folder
 	# and pass to image-stage html
@@ -87,7 +87,7 @@ def image_stage():
 	return render_template("image_stage.html", img_data=encoded_img_data.decode('utf-8'))
 
 
-@app.route('/scan-image', methods=['POST', 'GET'])
+@app.route('/scan-image', methods=['POST'])
 def scan_image():
 	# attempt to retrieve barcode number from image, using API
 	barcode_number = reader.scan_image(get_image_file())
@@ -109,7 +109,7 @@ def scan_image():
 		return redirect(url_for("home"))
 
 
-@app.route('/results', methods=['POST', 'GET'])
+@app.route('/results', methods=['GET'])
 def results():
 	return render_template("results.html", results=reader.results)
 
